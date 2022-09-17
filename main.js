@@ -1,31 +1,52 @@
+// micruopp.com
+// @author Mic Ruopp dev@micruopp.com
+// Copyright 2022. All rights reserved.
+
 (function() {
-  window.onload = beforeLaunch;
+  // Markup identifiers
+  const SCHEME = 'data-color-scheme';
 
-  document.addEventListener('DOMContentLoaded', launchApp);
+  function toggleColorScheme() {
+    const el = document.documentElement;
+    let currScheme = el.getAttribute(SCHEME);
 
-  function beforeLaunch() {
-    console.log('window loaded.');
+    // Detect OS default
+    let defaultScheme = 'dark';
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+      defaultScheme = 'light';
+    }
+    
+    let colorScheme = 'default';
+    switch (currScheme) {
+    case 'dark':
+      colorScheme = 'light';
+      break;
+    case 'light':
+      colorScheme = 'dark';
+      break;
+    default:
+      colorScheme = defaultScheme === 'dark' ? 'light' : 'dark';
+    }
+
+    el.setAttribute(SCHEME, colorScheme);
+  }
+  
+  function handleKeyDown(e) {
+    switch (e.key) {
+    case 'd':
+      toggleColorScheme();
+      break;
+    default:
+    }
+  }
+ 
+  function addEventListeners() {
+    window.addEventListener('keydown', handleKeyDown);
+  }
+  
+  function main() {
+    addEventListeners();
   }
 
-  function launchApp() {
-    randomizeGreeting();
-  }
-
-  function randomizeGreeting() {
-    const greetings = [
-      "Hey!",
-      "Hi!",
-      "Hello there.",
-      "Yo.",
-      "&#x1F44B",
-    ];
-
-    const greetingEl = document.getElementById('greeting');
-
-    let randomIndex = Math.floor(Math.random() * greetings.length);
-    let newGreeting = `${greetings[randomIndex]} I'm`;
-    //let newGreeting = `${greetings[4]} <p>&#x1F354</p> I'm`;
-
-    greetingEl.innerHTML = newGreeting; 
-  }
+  document.addEventListener('DOMContentLoaded', main);
 })();

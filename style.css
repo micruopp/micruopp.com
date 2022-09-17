@@ -1,9 +1,48 @@
+/* micruopp.com
+ * @author Mic Ruopp dev@micruopp.com
+ * Copyright 2022. All rights reserved.
+ */
 :root {
- /* Fonts */
-  --system-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  /* Greyscale */
+  --black: #28292b;
+  --dk-grey: #47484a;
+  --grey: #66676a;
+  --lt-grey: #adafb4;
+  --white: #f5f7ff;
+  
+  /* Fonts */
+  --system-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   --system-serif: "Iowan Old Style", "Apple Garamond", "Baskerville", "Times New Roman", "Droid Serif", Times, "Source Serif Pro", serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   --system-mono: 'SF Mono', SFMono-Regular, ui-monospace, Menlo,  Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --system: var(--system-sans);
+  
+  /* Themes */
+  --dk-bg-p: var(--black);
+  --dk-fg-p: var(--white);
+  --dk-fg-s: var(--dk-grey);
+  
+  --lt-bg-p: var(--white);
+  --lt-fg-p: var(--black);
+  --lt-fg-s: var(--lt-grey);
+
+  /* Defaults */
+  --bg-p: var(--dk-bg-p);
+  --fg-p: var(--dk-fg-p);
+  --fg-s: var(--dk-fg-s);
+    
+  --font: var(--system);
+}
+
+:root[data-color-scheme="light"] {
+  --bg-p: var(--lt-bg-p);
+  --fg-p: var(--lt-fg-p);
+  --fg-s: var(--lt-fg-s);
+}
+
+:root[data-color-scheme="dark"] {
+  --bg-p: var(--dk-bg-p);
+  --fg-p: var(--dk-fg-p);
+  --fg-s: var(--dk-fg-s);
 }
 
 * {
@@ -18,75 +57,119 @@ body {
   height: 100%;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 ul {
   list-style: none;
 }
 
-#default {
-  background-color: ;
-  color: ;
-  font-family: var(--system); 
-}
-
-#default h1,
-#default .h1 {}
-
 .container {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  width: 100%;  
+  min-height: 100%;
+  overflow: hidden;
 }
 
 .content {
   max-width: 1000px;
-  margin: auto;
-  padding: 5px;
+  margin: 0 auto;
+  padding: 25px;
 }
 
-.divider {
-  background-color: black;
-  height: 1px;
-  margin: 25px 0;
-  width: 100%;
-}
-
+.header,
+.main,
 .footer {
-  background-color: var(--);
+  position: relative;
+}
+
+.header,
+.footer {
   flex: 0 0 auto;
 }
 
 .main {
   flex: 1 0 auto;
-  align-items: center;
 }
 
-#legal {
-  margin: 25px 0 10px 0;
+.bg {
+  position: absolute;
 }
 
-#message {
-  margin: 150px 0 0 50px;
+.main > .bg {
+  left: 3%;
+  top: 3%;
 }
 
-#greeting {
-  font-family: var(--system-mono);
-  font-size: 2em;
-  font-weight: 400;
-  /*font-style: oblique;*/
-  letter-spacing: .35rem;
-  line-height: 2em;
+.footer > .content {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  
+  font-size: .8rem;
+  text-align: right;
 }
 
-#name {
-  font-family: var(--system-mono);
-  font-size: 3.5em;
+.footer .contact p:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+#default {
+  background-color: var(--bg-p);
+  color: var(--fg-p);
+  font-family: var(--font); 
+}
+
+#bg-main-text {
+  color: var(--fg-s);
+  font-size: 27vw;
   font-weight: 600;
-  letter-spacing: .35rem;
-  /*line-height: ;*/
+  line-height: 0.8;
   text-transform: uppercase;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
 }
 
-#first-name {}
+#bg-main-text:hover,
+#bg-main-text:active {
+  cursor: default;
+}
 
-#last-name {}
+@media (prefers-color-scheme: light) {
+  /* This is a little trick I'm borrowing from MDNs' website */
+  :root:not([data-color-scheme]) {
+    --bg-p: var(--lt-bg-p);
+    --fg-p: var(--lt-fg-p);
+    --fg-s: var(--lt-fg-s);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-color-scheme]) {
+    --bg-p: var(--dk-bg-p);
+    --fg-p: var(--dk-fg-p);
+    --fg-s: var(--dk-fg-s);
+  }
+}
+
+@media screen and (orientation: portrait) {
+  #bg-main-text {
+    font-size: 27vh;
+    writing-mode: vertical-rl;
+  }
+}
+
+@media screen and (orientation: portrait) and (max-width: 480px) {
+  #bg-main-text {
+    font-size: 25vh;
+  }
+}
