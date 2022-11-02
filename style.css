@@ -9,6 +9,13 @@
   --grey: #66676a;
   --lt-grey: #adafb4;
   --white: #f5f7ff;
+
+  /* Colors */
+  --rose: #f30c59;
+  --electric: #0c79f3;
+  --purple: #6c0af0;
+  --aqua: #0af0ae;
+  --peach: #f9c7a8;
   
   /* Fonts */
   --system-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -18,31 +25,41 @@
   
   /* Themes */
   --dk-bg-p: var(--black);
+  --dk-bg-s: var(--dk-grey);
   --dk-fg-p: var(--white);
   --dk-fg-s: var(--dk-grey);
+  --dk-fg-t: #3269ff;
   
   --lt-bg-p: var(--white);
+  --lt-bg-s: var(--lt-grey);
   --lt-fg-p: var(--black);
   --lt-fg-s: var(--lt-grey);
+  --lt-fg-t: var(--rose);
 
   /* Defaults */
   --bg-p: var(--dk-bg-p);
+  --bg-s: var(--dk-bg-s);
   --fg-p: var(--dk-fg-p);
   --fg-s: var(--dk-fg-s);
+  --fg-t: var(--dk-fg-t);
     
   --font: var(--system);
 }
 
 :root[data-color-scheme="light"] {
   --bg-p: var(--lt-bg-p);
+  --bg-s: var(--lt-bg-s);
   --fg-p: var(--lt-fg-p);
   --fg-s: var(--lt-fg-s);
+  --fg-t: var(--lt-fg-t);
 }
 
 :root[data-color-scheme="dark"] {
   --bg-p: var(--dk-bg-p);
+  --bg-s: var(--dk-bg-s);
   --fg-p: var(--dk-fg-p);
   --fg-s: var(--dk-fg-s);
+  --fg-t: var(--dk-fg-t);
 }
 
 * {
@@ -98,6 +115,10 @@ ul {
   flex: 1 0 auto;
 }
 
+.footer {
+  padding-top: 25px;
+}
+
 .bg {
   position: absolute;
 }
@@ -105,19 +126,33 @@ ul {
 .main > .bg {
   left: 3%;
   top: 3%;
+  bottom: -10%;
 }
 
 .footer > .content {
   display: flex;
-  flex-direction: row-reverse;
+  /*flex-direction: row-reverse;*/
   justify-content: space-between;
-  
   font-size: .8rem;
-  text-align: right;
 }
 
-.footer .contact p:not(:last-child) {
+.footer .col p:not(:last-child) {
   margin-bottom: 5px;
+}
+
+.footer .content .row .col p:first-child {
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.footer .content {
+  color: var(--bg-s);
+}
+
+.footer .content .heading {
+  color: var(--bg-p);
+  font-family: var(--system-mono);
 }
 
 #default {
@@ -127,10 +162,11 @@ ul {
 }
 
 #bg-main-text {
-  color: var(--fg-s);
-  font-size: 27vw;
+  color: var(--fg-t);
+  font-size: 25vw;
   font-weight: 600;
-  line-height: 0.8;
+  /*line-height: 0.8;*/
+  line-height: 18vw;
   text-transform: uppercase;
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -148,8 +184,10 @@ ul {
   /* This is a little trick I'm borrowing from MDNs' website */
   :root:not([data-color-scheme]) {
     --bg-p: var(--lt-bg-p);
+    --bg-s: var(--lt-bg-s);
     --fg-p: var(--lt-fg-p);
     --fg-s: var(--lt-fg-s);
+    --fg-t: var(--lt-fg-t);
   }
 }
 
@@ -163,13 +201,53 @@ ul {
 
 @media screen and (orientation: portrait) {
   #bg-main-text {
-    font-size: 27vh;
+    font-size: 45vw;
+    line-height: 35vw;
+    padding-top: 0;
+    padding-left: -150px;
     writing-mode: vertical-rl;
   }
 }
 
 @media screen and (orientation: portrait) and (max-width: 480px) {
   #bg-main-text {
-    font-size: 25vh;
+    /*font-size: 25vh;*/
   }
+}
+
+.footer.inverted {
+  --filter: invert(100%);
+  backdrop-filter: var(--filter);
+  -webkit-backdrop-filter: var(--filter);
+  color: var(--dk-bg-p);
+}
+
+
+/* Row and Col definitions */
+.content {
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.row:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.col:not(:last-child) {
+  margin-right: 30px;
+}
+
+
+/* Custom rows and cols */
+.footer .content .row:first-child {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+#legal.row {
+  border-top: 1px solid var(--bg-s);
 }
