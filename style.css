@@ -121,12 +121,9 @@ ul {
 
 .bg {
   position: absolute;
-}
-
-.main > .bg {
   left: 3%;
-  top: 3%;
-  bottom: -10%;
+  bottom: 3%;
+  overflow: hidden;
 }
 
 .footer > .content {
@@ -200,12 +197,17 @@ ul {
 }
 
 @media screen and (orientation: portrait) {
+  .bg {
+    transform: rotate(-90deg);
+    transform-origin: bottom left;
+    left: 70vw;
+  }
+
   #bg-main-text {
     font-size: 45vw;
     line-height: 35vw;
     padding-top: 0;
     padding-left: -150px;
-    writing-mode: vertical-rl;
   }
 }
 
