@@ -4,7 +4,7 @@ import Layout from '../../components/layout';
 import Date from '../../components/date';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Photo, getAllPhotoIds, getPhotoData } from '../../lib/photos';
+import { type Photo, getAllPhotoIds, getPhotoData } from '../../lib/photos';
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const photo = await getPhotoData(params?.id as string);
@@ -23,7 +23,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 }
 
-export default function Photo({ photo }: { photo: Photo }) {
+export default function PhotoPage({ photo }: { photo: Photo }) {
   let pageName = photo.id;
   let imageSize = 800;
 
