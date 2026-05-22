@@ -1,0 +1,29 @@
+name: Sync CMS config
+
+on:
+  workflow_dispatch:
+  # Uncomment to sync automatically when cms.config.json changes on main:
+  # push:
+  #   branches: [main]
+  #   paths: [cms.config.json]
+
+jobs:
+  sync:
+    name: Upload cms.config.json to R2
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Upload config to R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+        run: |
+          aws s3 cp cms.config.json \
+            s3://${R2_BUCKET_NAME}/config/site.json \
+            --endpoint-url https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com \
+            --content-type application/json
