@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const getStaticProps: GetStaticProps = async () => {
-  const allPhotosData = getSortedPhotosData();
+  const allPhotosData = await getSortedPhotosData();
   return {
     props: {
       allPhotosData,
@@ -28,7 +28,7 @@ export default function Photos({ allPhotosData }: { allPhotosData: Photo[] }) {
                 <div>
                   <Link href={`/photos/${photo.id}`}>
                     <Image
-                      src={`/images/${photo.filename}`}
+                      src={photo.url ?? `/images/${photo.filename}`}
                       alt={photo.description}
                       width={(photo.aspectRatio > 1) ? thumbnailSize * photo.aspectRatio : thumbnailSize}
                       height={(photo.aspectRatio < 1) ? thumbnailSize / photo.aspectRatio : thumbnailSize}
