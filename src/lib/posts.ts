@@ -3,77 +3,88 @@ import path from 'path';
 import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
+import { getSiteBundle } from './cms';
 
 export interface Post {
-
+  id: string;
+  title: string;
+  createdAt: string;
 }
 
 const postsDirectory = path.join(process.cwd(), 'src/data/posts');
 
-export function getSortedPostsData() {
-  const fileNames = fs.readdirSync(postsDirectory);
-  const allPostsData = fileNames.map((filename) => {
-    const id = filename.replace(/\.md$/, '');
-  
-    const fullPath = path.join(postsDirectory, filename);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-  
-    const matterResult = matter(fileContents);
-    
-    let article = undefined;
-    const isPublished = matterResult.data['Published'];
-    const createdAt = matterResult.data['CreatedAt'];
-    const title = matterResult.data['Title'];
+export async function getSortedPostsData(): Promise<Post[]> {
+  const bundle = await getSiteBundle();
+  const cmsItems = bundle?.collections?.posts?.items;
 
-    if (isPublished) {
-      article = {
+  if (cmsItems && cmsItems.length > 0) {
+    return cmsItems
+      .filter(item => item.content.published === true)
+      .map(item => ({
+        id: item.id,
+        title: String(item.content.title ?? ''),
+        createdAt: String(item.content.createdAt ?? ''),
+      }))
+      .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
+  }
+
+  // Markdown fallback
+  return fs.readdirSync(postsDirectory)
+    .map(filename => {
+      const id = filename.replace(/\.md$/, '');
+      const fullPath = path.join(postsDirectory, filename);
+      const { data } = matter(fs.readFileSync(fullPath, 'utf8'));
+      if (!data['Published']) return undefined;
+      return {
         id,
-        createdAt,
-        title,
+        title: String(data['Title'] ?? ''),
+        createdAt: String(data['CreatedAt'] ?? ''),
       };
-    }    
-
-    return article;
-  })
-  .filter(
-    (article => article !== undefined)
-  );
-
-  return allPostsData.sort((a, b) => {
-    if (a && b && a.createdAt > b.createdAt) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
+    })
+    .filter((p): p is Post => p !== undefined)
+    .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
 }
 
-export function getAllPostIds() {
-  const fileNames = fs.readdirSync(postsDirectory);
-  
-  return fileNames.map((filename) => {
-    return {
-      params: {
-        id: filename.replace(/\.md$/, ''),
-      },
-    };
-  });
+export async function getAllPostIds(): Promise<Array<{ params: { id: string } }>> {
+  const bundle = await getSiteBundle();
+  const cmsItems = bundle?.collections?.posts?.items;
+
+  if (cmsItems && cmsItems.length > 0) {
+    return cmsItems.map(item => ({ params: { id: item.id } }));
+  }
+
+  // Markdown fallback
+  return fs.readdirSync(postsDirectory).map(filename => ({
+    params: { id: filename.replace(/\.md$/, '') },
+  }));
 }
 
 export async function getPostData(id: string) {
+  const bundle = await getSiteBundle();
+  const cmsItem = bundle?.collections?.posts?.items?.find(i => i.id === id);
+
+  if (cmsItem) {
+    const processedContent = await remark()
+      .use(html)
+      .process(String(cmsItem.content.body ?? ''));
+    return {
+      id,
+      title: String(cmsItem.content.title ?? ''),
+      createdAt: String(cmsItem.content.createdAt ?? ''),
+      content: processedContent.toString(),
+    };
+  }
+
+  // Markdown fallback
   const fullPath = path.join(postsDirectory, `${id}.md`);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-  
-  const matterResult = matter(fileContents);
-  
+  const matterResult = matter(fs.readFileSync(fullPath, 'utf8'));
   const processedContent = await remark()
     .use(html)
     .process(matterResult.content);
-  const content = processedContent.toString();
-  
   return {
     id,
-    content,
-    ...matterResult.data,
+    title: String(matterResult.data['Title'] ?? ''),
+    createdAt: String(matterResult.data['CreatedAt'] ?? ''),
+    content: processedContent.toString(),
   };
 }

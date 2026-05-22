@@ -8,8 +8,8 @@ import { getSortedPhotosData } from '../lib/photos';
 import { getSortedRepoData } from '../lib/github';
 
 export const getStaticProps: GetStaticProps = async () => {
-  const allPostsData = getSortedPostsData();
-  const allPhotosData = getSortedPhotosData();
+  const allPostsData = await getSortedPostsData();
+  const allPhotosData = await getSortedPhotosData();
   //const allRepoData = getSortedRepoData();
 
   const allData: any = [];
