@@ -24,15 +24,13 @@ export default function Code({ repos }: { repos: { name: string, desc: string, u
         {repos.map(({ name, desc, url, createdAt, updatedAt, languages }) => (
           <li key={name}>
             <div>
-              <a href={url} target="_blank" rel="noopener noreferrer">
-                <div key={name} className="repocard">
-                  <a href={url} target="_blank" rel="noopener noreferrer" className="repolink"></a>
-                  <p className="name">{name}</p>
-                  <p className="created-at">Created <Date dateString={createdAt} /></p>
-                  <p className="description">{desc}</p>
-                  {/*<p className="languages">Built with: {languages}</p>*/}
-                </div>
-              </a>
+              <div key={name} className="repocard">
+                <a href={url} target="_blank" rel="noopener noreferrer" className="repolink"></a>
+                <p className="name">{name}</p>
+                <p className="created-at">Created <Date dateString={createdAt} /></p>
+                <p className="description">{desc}</p>
+                {/*<p className="languages">Built with: {languages}</p>*/}
+              </div>
             </div>
           </li>
         ))}

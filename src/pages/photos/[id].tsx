@@ -31,7 +31,7 @@ export default function PhotoPage({ photo }: { photo: Photo }) {
     <Layout pageName={pageName} pageId={`photo-${pageName}`}>
       <article>
         <div>
-          <Image 
+          <Image
             src={photo.url ?? `/images/${photo.filename}`}
             alt={photo.description}
             width={(photo.aspectRatio > 1) ? imageSize * photo.aspectRatio : imageSize}

@@ -23,8 +23,8 @@ export async function getSortedPhotosData(): Promise<Photo[]> {
   if (cmsItems && cmsItems.length > 0) {
     return cmsItems
       .map(item => {
-        const width = Number(item.content.width ?? 1);
-        const height = Number(item.content.height ?? 1);
+        const width = Math.max(1, Number(item.content.width) || 1);
+        const height = Math.max(1, Number(item.content.height) || 1);
         const imageAsset = item.assets.find(a => a.fieldName === 'image');
         return {
           id: item.id,
@@ -78,8 +78,8 @@ export async function getPhotoData(id: string): Promise<Photo> {
   const cmsItem = bundle?.collections?.photos?.items?.find(i => i.id === id);
 
   if (cmsItem) {
-    const width = Number(cmsItem.content.width ?? 1);
-    const height = Number(cmsItem.content.height ?? 1);
+    const width = Math.max(1, Number(cmsItem.content.width) || 1);
+    const height = Math.max(1, Number(cmsItem.content.height) || 1);
     const imageAsset = cmsItem.assets.find(a => a.fieldName === 'image');
     return {
       id,
