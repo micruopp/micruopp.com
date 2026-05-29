@@ -9,21 +9,19 @@ on:
 
 jobs:
   sync:
-    name: Upload cms.config.json to R2
+    name: Upload cms.config.json to Vercel Blob
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v4
 
-      - name: Upload config to R2
+      - name: Upload config to Vercel Blob
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
-          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
         run: |
-          aws s3 cp cms.config.json \
-            s3://${R2_BUCKET_NAME}/config/site.json \
-            --endpoint-url https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com \
-            --content-type application/json
+          curl -sf -X PUT "https://blob.vercel-storage.com/config/site.json" \
+            -H "Authorization: Bearer ${BLOB_READ_WRITE_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -H "x-content-type: application/json" \
+            --data-binary @cms.config.json
