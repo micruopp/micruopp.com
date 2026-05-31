@@ -1,0 +1,48 @@
+{
+  "name": "micruopp.com",
+  "siteUrl": "https://micruopp.com",
+  "framework": "nextjs",
+  "schemas": ["homepage", "about"],
+  "pages": [
+    { "slug": "/", "schema": "homepage" },
+    {
+      "slug": "/about",
+      "schema": "about",
+      "rendering": {
+        "titleField": "title",
+        "bodyField": "bio",
+        "imageField": "profileImage",
+        "imageAltField": "profileImageAlt"
+      },
+      "fields": [
+        { "name": "title",           "type": "text",     "label": "Title",           "required": false, "defaultValue": "About" },
+        { "name": "bio",             "type": "richtext", "label": "Bio",             "required": true  },
+        { "name": "profileImage",    "type": "image",    "label": "Profile Photo",   "required": false },
+        { "name": "profileImageAlt", "type": "text",     "label": "Photo Alt Text",  "required": false }
+      ]
+    }
+  ],
+  "collections": [
+    {
+      "name": "posts",
+      "slugPattern": "/posts/{id}",
+      "fields": [
+        { "name": "title",     "type": "text",     "label": "Title",      "required": true  },
+        { "name": "body",      "type": "richtext",  "label": "Body",       "required": true  },
+        { "name": "createdAt", "type": "date",      "label": "Created At", "required": true  },
+        { "name": "published", "type": "boolean",   "label": "Published",  "required": false }
+      ]
+    },
+    {
+      "name": "photos",
+      "slugPattern": "/photos/{id}",
+      "fields": [
+        { "name": "image",       "type": "image",  "label": "Photo",       "required": true  },
+        { "name": "description", "type": "text",   "label": "Description", "required": true  },
+        { "name": "date_taken",  "type": "date",   "label": "Date Taken",  "required": false },
+        { "name": "width",       "type": "number", "label": "Width",       "required": false },
+        { "name": "height",      "type": "number", "label": "Height",      "required": false }
+      ]
+    }
+  ]
+}

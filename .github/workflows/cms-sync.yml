@@ -1,0 +1,27 @@
+name: Sync CMS config
+
+on:
+  workflow_dispatch:
+  # Uncomment to sync automatically when cms.config.json changes on main:
+  # push:
+  #   branches: [main]
+  #   paths: [cms.config.json]
+
+jobs:
+  sync:
+    name: Upload cms.config.json to Vercel Blob
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Upload config to Vercel Blob
+        env:
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+        run: |
+          curl -sf -X PUT "https://blob.vercel-storage.com/config/site.json" \
+            -H "Authorization: Bearer ${BLOB_READ_WRITE_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -H "x-content-type: application/json" \
+            --data-binary @cms.config.json
