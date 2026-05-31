@@ -5,7 +5,7 @@ import Avatar from '../components/avatar';
 import { Photo, getPhotoData } from '../lib/photos';
 
 export const getStaticProps: GetStaticProps = async () => {
-  const profilePhoto = getPhotoData('me');
+  const profilePhoto = await getPhotoData('me');
   return {
     props: {
       profilePhoto,

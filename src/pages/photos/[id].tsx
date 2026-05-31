@@ -16,7 +16,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = getAllPhotoIds();
+  const paths = await getAllPhotoIds();
   return {
     paths,
     fallback: false,
@@ -31,8 +31,8 @@ export default function PhotoPage({ photo }: { photo: Photo }) {
     <Layout pageName={pageName} pageId={`photo-${pageName}`}>
       <article>
         <div>
-          <Image 
-            src={`/images/${photo.filename}`}
+          <Image
+            src={photo.url ?? `/images/${photo.filename}`}
             alt={photo.description}
             width={(photo.aspectRatio > 1) ? imageSize * photo.aspectRatio : imageSize}
             height={(photo.aspectRatio < 1) ? imageSize / photo.aspectRatio : imageSize}
