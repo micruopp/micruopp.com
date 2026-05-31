@@ -16,12 +16,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Upload config to Vercel Blob
         env:
           BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
         run: |
-          curl -sf -X PUT "https://blob.vercel-storage.com/config/site.json" \
-            -H "Authorization: Bearer ${BLOB_READ_WRITE_TOKEN}" \
-            -H "Content-Type: application/json" \
-            -H "x-content-type: application/json" \
-            --data-binary @cms.config.json
+          npm install --no-save @vercel/blob
+          node -e "
+            const { put } = require('@vercel/blob');
+            const fs = require('fs');
+            put('config/site.json', fs.readFileSync('cms.config.json'), {
+              access: 'public',
+              allowOverwrite: true,
+              contentType: 'application/json',
+              token: process.env.BLOB_READ_WRITE_TOKEN,
+            }).then(r => console.log('Uploaded:', r.url))
+              .catch(e => { console.error(e.message); process.exit(1); });
+          "
