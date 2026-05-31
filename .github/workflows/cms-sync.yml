@@ -24,4 +24,5 @@ jobs:
             -H "Authorization: Bearer ${BLOB_READ_WRITE_TOKEN}" \
             -H "Content-Type: application/json" \
             -H "x-content-type: application/json" \
+            -H "x-add-random-suffix: 0" \
             --data-binary @cms.config.json
