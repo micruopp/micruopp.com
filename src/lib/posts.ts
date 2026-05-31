@@ -50,7 +50,9 @@ export async function getAllPostIds(): Promise<Array<{ params: { id: string } }>
   const cmsItems = bundle?.collections?.posts?.items;
 
   if (cmsItems && cmsItems.length > 0) {
-    return cmsItems.map(item => ({ params: { id: item.id } }));
+    return cmsItems
+      .filter(item => item.content.published === true)
+      .map(item => ({ params: { id: item.id } }));
   }
 
   // Markdown fallback
