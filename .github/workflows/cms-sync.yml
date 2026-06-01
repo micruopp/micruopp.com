@@ -16,18 +16,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-<<<<<<< HEAD
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-=======
->>>>>>> 27ad3db (refactor(cms): update sync workflow to upload config to Vercel Blob)
       - name: Upload config to Vercel Blob
         env:
           BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
         run: |
-<<<<<<< HEAD
           npm install --no-save @vercel/blob
           node -e "
             const { put } = require('@vercel/blob');
@@ -40,10 +36,3 @@ jobs:
             }).then(r => console.log('Uploaded:', r.url))
               .catch(e => { console.error(e.message); process.exit(1); });
           "
-=======
-          curl -sf -X PUT "https://blob.vercel-storage.com/config/site.json" \
-            -H "Authorization: Bearer ${BLOB_READ_WRITE_TOKEN}" \
-            -H "Content-Type: application/json" \
-            -H "x-content-type: application/json" \
-            --data-binary @cms.config.json
->>>>>>> 27ad3db (refactor(cms): update sync workflow to upload config to Vercel Blob)
