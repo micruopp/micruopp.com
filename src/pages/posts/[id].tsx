@@ -14,7 +14,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = getAllPostIds();
+  const paths = await getAllPostIds();
   return {
     paths,
     fallback: false,
@@ -22,12 +22,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export default function Post({ postData }: any) {
-  const pageName = postData.Title;
+  const pageName = postData.title;
   return (
     <Layout pageName={pageName}>
       <article>
         <div className="">
-          <Date dateString={postData.CreatedAt} />
+          <Date dateString={postData.createdAt} />
         </div>
         <div dangerouslySetInnerHTML={{ __html: postData.content}} />
       </article>
