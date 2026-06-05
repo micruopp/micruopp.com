@@ -30,6 +30,7 @@ jobs:
             const fs = require('fs');
             put('config/site.json', fs.readFileSync('cms.config.json'), {
               access: 'public',
+              addRandomSuffix: false,
               allowOverwrite: true,
               contentType: 'application/json',
               token: process.env.BLOB_READ_WRITE_TOKEN,
