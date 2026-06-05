@@ -20,9 +20,18 @@ export interface CmsBundleCollection {
   items: CmsBundleCollectionItem[];
 }
 
+export interface CmsBundlePage {
+  slug: string;
+  versionId: string;
+  updatedAt: string;
+  content: Record<string, unknown>;
+  assets: CmsBundleAsset[];
+}
+
 export interface CmsSiteBundle {
   contractVersion: string;
   generatedAt: string;
+  pages?: CmsBundlePage[];
   collections: Record<string, CmsBundleCollection>;
 }
 
@@ -50,4 +59,12 @@ export async function getSiteBundle(): Promise<CmsSiteBundle | null> {
     );
   }
   return _bundle;
+}
+
+export async function getCmsPage(slug: string): Promise<CmsBundlePage | null> {
+  const bundle = await getSiteBundle();
+  if (!bundle?.pages || bundle.pages.length === 0) {
+    return null;
+  }
+  return bundle.pages.find((page) => page.slug === slug) ?? null;
 }

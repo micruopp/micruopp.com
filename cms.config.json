@@ -37,9 +37,11 @@
       "name": "photos",
       "slugPattern": "/photos/{id}",
       "fields": [
+        { "name": "title",       "type": "text",   "label": "Title",       "required": true  },
         { "name": "image",       "type": "image",  "label": "Photo",       "required": true  },
         { "name": "description", "type": "text",   "label": "Description", "required": true  },
         { "name": "date_taken",  "type": "date",   "label": "Date Taken",  "required": false },
+        { "name": "published",   "type": "boolean","label": "Published",   "required": false, "defaultValue": true },
         { "name": "width",       "type": "number", "label": "Width",       "required": false },
         { "name": "height",      "type": "number", "label": "Height",      "required": false }
       ]

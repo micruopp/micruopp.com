@@ -22,6 +22,7 @@ export async function getSortedPhotosData(): Promise<Photo[]> {
 
   if (cmsItems && cmsItems.length > 0) {
     return cmsItems
+      .filter(item => item.content.published === true)
       .map(item => {
         const width = Math.max(1, Number(item.content.width) || 1);
         const height = Math.max(1, Number(item.content.height) || 1);
@@ -64,7 +65,9 @@ export async function getAllPhotoIds(): Promise<Array<{ params: { id: string } }
   const cmsItems = bundle?.collections?.photos?.items;
 
   if (cmsItems && cmsItems.length > 0) {
-    return cmsItems.map(item => ({ params: { id: item.id } }));
+    return cmsItems
+      .filter(item => item.content.published === true)
+      .map(item => ({ params: { id: item.id } }));
   }
 
   // Markdown fallback
