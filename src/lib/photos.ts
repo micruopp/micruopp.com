@@ -2,9 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { getSiteBundle } from './cms';
+import { buildPublishedTitleSlugEntries } from './slugs';
 
 export interface Photo {
   id: string;
+  slug: string;
+  title?: string;
   filename?: string;
   url?: string;
   date_taken: string;
@@ -21,14 +24,15 @@ export async function getSortedPhotosData(): Promise<Photo[]> {
   const cmsItems = bundle?.collections?.photos?.items;
 
   if (cmsItems && cmsItems.length > 0) {
-    return cmsItems
-      .filter(item => item.content.published === true)
-      .map(item => {
+    return buildPublishedTitleSlugEntries(cmsItems)
+      .map(({ item, slug }) => {
         const width = Math.max(1, Number(item.content.width) || 1);
         const height = Math.max(1, Number(item.content.height) || 1);
         const imageAsset = item.assets.find(a => a.fieldName === 'image');
         return {
           id: item.id,
+          slug,
+          title: String(item.content.title ?? item.id),
           url: imageAsset?.url ?? undefined,
           date_taken: String(item.content.date_taken ?? ''),
           description: String(item.content.description ?? ''),
@@ -49,6 +53,8 @@ export async function getSortedPhotosData(): Promise<Photo[]> {
       const height = data.height;
       return {
         id,
+        slug: id,
+        title: id,
         filename: data.filename as string,
         date_taken: data.date_taken as string,
         description: data.description as string,
@@ -65,9 +71,8 @@ export async function getAllPhotoIds(): Promise<Array<{ params: { id: string } }
   const cmsItems = bundle?.collections?.photos?.items;
 
   if (cmsItems && cmsItems.length > 0) {
-    return cmsItems
-      .filter(item => item.content.published === true)
-      .map(item => ({ params: { id: item.id } }));
+    return buildPublishedTitleSlugEntries(cmsItems)
+      .map(({ slug }) => ({ params: { id: slug } }));
   }
 
   // Markdown fallback
@@ -78,14 +83,20 @@ export async function getAllPhotoIds(): Promise<Array<{ params: { id: string } }
 
 export async function getPhotoData(id: string): Promise<Photo> {
   const bundle = await getSiteBundle();
-  const cmsItem = bundle?.collections?.photos?.items?.find(i => i.id === id);
+  const cmsItems = bundle?.collections?.photos?.items;
+  const cmsEntry = cmsItems
+    ? buildPublishedTitleSlugEntries(cmsItems).find(({ item, slug }) => slug === id || item.id === id)
+    : undefined;
+  const cmsItem = cmsEntry?.item;
 
   if (cmsItem) {
     const width = Math.max(1, Number(cmsItem.content.width) || 1);
     const height = Math.max(1, Number(cmsItem.content.height) || 1);
     const imageAsset = cmsItem.assets.find(a => a.fieldName === 'image');
     return {
-      id,
+      id: cmsItem.id,
+      slug: cmsEntry?.slug ?? id,
+      title: String(cmsItem.content.title ?? id),
       url: imageAsset?.url ?? undefined,
       date_taken: String(cmsItem.content.date_taken ?? ''),
       description: String(cmsItem.content.description ?? ''),
@@ -101,6 +112,8 @@ export async function getPhotoData(id: string): Promise<Photo> {
   const height = data.height;
   return {
     id,
+    slug: id,
+    title: id,
     filename: data.filename as string,
     date_taken: data.date_taken as string,
     description: data.description as string,

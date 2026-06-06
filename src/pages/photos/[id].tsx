@@ -24,7 +24,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export default function PhotoPage({ photo }: { photo: Photo }) {
-  let pageName = photo.id;
+  let pageName = photo.title || photo.id;
   let imageSize = 800;
 
   return (

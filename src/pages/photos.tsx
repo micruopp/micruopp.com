@@ -26,7 +26,7 @@ export default function Photos({ allPhotosData }: { allPhotosData: Photo[] }) {
             {allPhotosData.map((photo: Photo) => (
               <li key={photo.id}>
                 <div>
-                  <Link href={`/photos/${photo.id}`}>
+                  <Link href={`/photos/${photo.slug}`}>
                     <Image
                       src={photo.url ?? `/images/${photo.filename}`}
                       alt={photo.description}

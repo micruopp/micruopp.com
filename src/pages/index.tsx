@@ -15,12 +15,12 @@ export const getStaticProps: GetStaticProps = async () => {
   const allData: any = [];
   allPostsData.map((post) => {
     if (post) {
-      allData.push({ "name": post.title, "date": post.createdAt, "url": `/posts/${post.id}` });
+      allData.push({ "name": post.title, "date": post.createdAt, "url": `/posts/${post.slug}` });
     }
   });
   allPhotosData.map((photo) => {
     if (photo) {
-      allData.push({ "name": photo.id, "date": photo.date_taken, "url": `/photos/${photo.id}` });
+      allData.push({ "name": photo.title || photo.id, "date": photo.date_taken, "url": `/photos/${photo.slug}` });
     }
   });
   /*

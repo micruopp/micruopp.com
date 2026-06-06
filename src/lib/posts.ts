@@ -4,9 +4,11 @@ import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
 import { getSiteBundle } from './cms';
+import { buildPublishedTitleSlugEntries } from './slugs';
 
 export interface Post {
   id: string;
+  slug: string;
   title: string;
   createdAt: string;
 }
@@ -18,10 +20,10 @@ export async function getSortedPostsData(): Promise<Post[]> {
   const cmsItems = bundle?.collections?.posts?.items;
 
   if (cmsItems && cmsItems.length > 0) {
-    return cmsItems
-      .filter(item => item.content.published === true)
-      .map(item => ({
+    return buildPublishedTitleSlugEntries(cmsItems)
+      .map(({ item, slug }) => ({
         id: item.id,
+        slug,
         title: String(item.content.title ?? ''),
         createdAt: String(item.content.createdAt ?? ''),
       }))
@@ -37,6 +39,7 @@ export async function getSortedPostsData(): Promise<Post[]> {
       if (!data['Published']) return undefined;
       return {
         id,
+        slug: id,
         title: String(data['Title'] ?? ''),
         createdAt: String(data['CreatedAt'] ?? ''),
       };
@@ -50,9 +53,8 @@ export async function getAllPostIds(): Promise<Array<{ params: { id: string } }>
   const cmsItems = bundle?.collections?.posts?.items;
 
   if (cmsItems && cmsItems.length > 0) {
-    return cmsItems
-      .filter(item => item.content.published === true)
-      .map(item => ({ params: { id: item.id } }));
+    return buildPublishedTitleSlugEntries(cmsItems)
+      .map(({ slug }) => ({ params: { id: slug } }));
   }
 
   // Markdown fallback
@@ -63,14 +65,18 @@ export async function getAllPostIds(): Promise<Array<{ params: { id: string } }>
 
 export async function getPostData(id: string) {
   const bundle = await getSiteBundle();
-  const cmsItem = bundle?.collections?.posts?.items?.find(i => i.id === id);
+  const cmsItems = bundle?.collections?.posts?.items;
+  const cmsEntry = cmsItems
+    ? buildPublishedTitleSlugEntries(cmsItems).find(({ item, slug }) => slug === id || item.id === id)
+    : undefined;
+  const cmsItem = cmsEntry?.item;
 
   if (cmsItem) {
     const processedContent = await remark()
       .use(html)
       .process(String(cmsItem.content.body ?? ''));
     return {
-      id,
+      id: cmsEntry?.slug ?? id,
       title: String(cmsItem.content.title ?? ''),
       createdAt: String(cmsItem.content.createdAt ?? ''),
       content: processedContent.toString(),

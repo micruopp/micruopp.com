@@ -25,9 +25,9 @@ export default function Posts({ allPostsData }: any) {
       </Head>
       <section>
         <ul>
-          {allPostsData.map(({ id, title, createdAt }: any) => (
+          {allPostsData.map(({ id, slug, title, createdAt }: any) => (
             <li className="" key={id}>
-              <Link href={`/posts/${id}`}>
+              <Link href={`/posts/${slug}`}>
                 {title}
               </Link>
               <br />

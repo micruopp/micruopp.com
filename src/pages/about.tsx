@@ -57,7 +57,6 @@ export default function About({ profilePhoto, cmsAbout }: { profilePhoto: Photo;
       <div>
         {cmsAbout ? (
           <>
-            <h1>{cmsAbout.title}</h1>
             <div dangerouslySetInnerHTML={{ __html: cmsAbout.bioHtml }} />
             {cmsAbout.profileImageUrl ? (
               <div className="avatar">
