@@ -6,7 +6,7 @@ import Date from '../components/date';
 import { getSortedRepoData } from '../lib/github';
 
 export const getStaticProps = async () => {
-  let repos = await getSortedRepoData();  
+  let repos = await getSortedRepoData();
   return {
     props: {
       repos,
@@ -25,11 +25,12 @@ export default function Code({ repos }: { repos: { name: string, desc: string, u
           <li key={name}>
             <div>
               <div key={name} className="repocard">
-                <a href={url} target="_blank" rel="noopener noreferrer" className="repolink"></a>
-                <p className="name">{name}</p>
-                <p className="created-at">Created <Date dateString={createdAt} /></p>
-                <p className="description">{desc}</p>
-                {/*<p className="languages">Built with: {languages}</p>*/}
+                <a href={url} target="_blank" rel="noopener noreferrer" className="repolink">
+                  <p className="name">{name}</p>
+                  <p className="created-at">Created <Date dateString={createdAt} /></p>
+                  <p className="description">{desc}</p>
+                  {/*<p className="languages">Built with: {languages}</p>*/}
+                </a>
               </div>
             </div>
           </li>
